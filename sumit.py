@@ -3,15 +3,26 @@ import pandas as pd
 import numpy as np
 
 
-# funtion 
-def add(a,b) -> int:
-    return a+b
+inputFile = './US Accident Sample.csv'
+inputDF = pd.read_csv(inputFile)
 
+print(inputDF.head())
+print(inputDF.get_dtype_counts())
+print(inputDF.info())
 
-# Main logic
-print("hello")
-print("hello2")
+inputDF.dropna(how='all', inplace=True)
+print(inputDF.head())
+print(inputDF.get_dtype_counts())
+print(inputDF.info())
 
-print(add(1,2))
+inputDF.dropna(subset=['Timezone'], inplace=True)
 
+print(type(inputDF['Timezone'].value_counts()))
 
+print(type(inputDF['Timezone'].unique()))
+print(inputDF['Timezone'].unique())
+
+Timezones = []
+Counts = []
+Timezones_Counts = inputDF['Timezone'].value_counts()
+print(Timezones_Counts)
