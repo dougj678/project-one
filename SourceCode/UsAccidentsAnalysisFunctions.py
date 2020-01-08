@@ -7,6 +7,7 @@ import pandas as pd
 import os
 import numpy as np
 import matplotlib.pyplot as plt
+import datetime as dt
 
 # Import configurations
 from Configs import inputFileName
@@ -73,77 +74,6 @@ def cleanInputData(inputDF: pd.DataFrame) -> pd.DataFrame:
     return inputDF
 
 ####################################################################################################################################################################################
-# Function: Analyze by Timezone  
-####################################################################################################################################################################################
-def accidentsByTimezone(inputDF: pd.DataFrame):
-    
-    # Get unique timezones & counts
-    timezonesCounts = inputDF['Timezone'].value_counts()
-    timezonesLabels = inputDF['Timezone'].value_counts().index.tolist()
-
-    # 1. Count(s) of accidents by timezone
-
-    # Set plot attributes such as explode, colors, & title
-    pieExplode = (0.05, 0, 0, 0)    
-    pieColors = ['royalblue', 'darkorange', 'gold', 'darkolivegreen']
-    plt.title("Accidents in Different Timezone")
-    # Plot the Pie chart
-    plt.figure(figsize=(12, 8))
-    plt.pie(timezonesCounts, explode=pieExplode, colors=pieColors, labels=timezonesLabels,
-        autopct="%1.1f%%", shadow=True, startangle=135)
-    plt.axis("equal")
-
-    # Define & Save: Output file - Pie chart
-    outputFile = outputFilePath + 'Timezone_Accidents_Counts_Pie.jpg'
-    plt.savefig(outputFile)
-    plt.close()
-    print("Graph plotted: " + outputFile)
-
-
-    # 2. Average severity pf accident by Timezone
-
-    # Empty lists for bar chart to be plotted
-    barYAxisTimezonesAvgSev = []
-    barXAxisTimezonesLabels = []
-
-    # Extract mean (avg) sev for each timezone:
-    for tz in timezonesLabels:
-        meanSev = inputDF[inputDF['Timezone'] == tz]['Severity'].mean()
-        barYAxisTimezonesAvgSev.append(round(meanSev,3))
-        barXAxisTimezonesLabels.append(tz)
-
-    # Set the bar chart attributes such as X-Axis, Y-Axis, colors etc.
-    # colors
-    barColors = ['royalblue', 'darkorange', 'gold', 'darkolivegreen']
-    # title
-    plt.title("Average Accidents Severity in Different Timezone")
-    # X-Axix limits & label: 
-    plt.xlim(-0.75, len(barXAxisTimezonesLabels)-0.25)
-    plt.xlabel("Timezone")
-    xlocs, xlabs = plt.xticks()
-    xlocs=[i+1 for i in range(0,len(barYAxisTimezonesAvgSev))]
-    xlabs=[i/2 for i in range(0,len(barYAxisTimezonesAvgSev))]
-    plt.xticks(xlocs, xlabs)
-
-    # Y-Axis limits & labll
-    plt.ylim(0, max(barYAxisTimezonesAvgSev)+0.500)
-    plt.ylabel("Avergare Severity of Accident")
-
-    # Plot the bar chart:
-    plt.figure(figsize=(12, 8))
-    plt.bar(barXAxisTimezonesLabels, barYAxisTimezonesAvgSev, color=barColors, alpha=0.5, align="center")
-    # put value labes for Y-Axis 
-    for i, v in enumerate(barYAxisTimezonesAvgSev):
-        plt.text(xlocs[i] -1.10, v + 0.01, str(v))
- 
-    # Define & Save: Output file - Pie chart
-    outputFile = outputFilePath + 'Timezone_Accidents_AvgSev_Bar.jpg'
-    plt.savefig(outputFile)
-    plt.close()
-    print("Graph plotted: " + outputFile)
-
-
-####################################################################################################################################################################################
 # Function: Add date columns to the dataframe  
 ####################################################################################################################################################################################
 def addDateColumns(inputDF: pd.DataFrame) -> pd.DataFrame:
@@ -157,5 +87,103 @@ def addDateColumns(inputDF: pd.DataFrame) -> pd.DataFrame:
     print("Added required date columns to the dataframe")
 
     return inputDF
+
+####################################################################################################################################################################################
+# Function: Analyze by Timezone  
+####################################################################################################################################################################################
+def accidentsByTimezone(inputDF: pd.DataFrame):
+    
+    outputFileSubPath = 'ByTimezone/'
+
+    # Get unique timezones & counts
+    timezonesCounts = inputDF['Timezone'].value_counts().tolist()
+    timezonesLabels = inputDF['Timezone'].value_counts().index.tolist()
+    # Set colors for timezones
+    timezonesGraphColors = ['royalblue', 'darkorange', 'gold', 'darkolivegreen']
+
+
+    # 1. Count(s) of accidents by timezone
+
+
+    # 1.1. Pie Chart (Counts by timezone)
+    # Set the plot attributes & Plot the Pie chart
+    pieExplode = (0.05, 0, 0, 0)    
+    plt.figure(figsize=(12, 8))
+    plt.axis("equal")
+    plt.pie(timezonesCounts, explode=pieExplode, colors=timezonesGraphColors, labels=timezonesLabels,
+        autopct="%1.1f%%", shadow=True, startangle=135)
+    plt.title("Accidents in Different Timezone")
+    # Save output file
+    outputFile = outputFilePath + outputFileSubPath + 'Timezone_Accidents_Counts_Pie.jpg'
+    plt.savefig(outputFile)
+    plt.close()
+    print("Graph plotted: " + outputFile)
+
+
+    # 1.2. Bar Chart (Counts by timezone)
+    # Set the plot attributes & Plot the Bar chart
+    plt.figure(figsize=(12, 8))
+    # X-Axix limits & label: 
+    plt.xlim(-0.75, len(timezonesLabels)-0.25)
+    plt.xlabel("Timezone")
+    xlocs, xlabs = plt.xticks()
+    # xlocs=[i+1 for i in range(0,len(timezonesLabels))]
+    # xlabs=[i/2 for i in range(0,len(timezonesLabels))]
+    xlocs=[i for i in range(0,len(timezonesLabels))]
+    xlabs=timezonesLabels
+    plt.xticks(xlocs, xlabs)
+    # Y-Axis limits & label
+    plt.ylim(0, max(timezonesCounts)+200000)
+    plt.ylabel("Count of Accident(s)")
+    # Plot the chart
+    plt.bar(timezonesLabels, timezonesCounts, color=timezonesGraphColors, alpha=0.5, align="center")
+    plt.title("Accidents in Different Timezone")
+    # put value labes for Y-Axis 
+    for i, v in enumerate(timezonesCounts):
+        # Tip: Adjust -0.10 & +0.01 for positioning the lable text in the bar column
+        plt.text(xlocs[i] -0.10, v + 0.01, str(v))
+    # Save output file 
+    outputFile = outputFilePath + outputFileSubPath + 'Timezone_Accidents_Counts_Bar.jpg'
+    plt.savefig(outputFile)
+    plt.close()
+    print("Graph plotted: " + outputFile)
+
+
+
+    # 2. Average severity pf accident by Timezone
+
+    # Empty lists for bar chart to be plotted
+    timezonesAvgSev = []
+    
+    # Extract mean (avg) sev for each timezone:
+    for tz in timezonesLabels:
+        meanSev = inputDF[inputDF['Timezone'] == tz]['Severity'].mean()
+        timezonesAvgSev.append(round(meanSev,3))
+
+    # Set the plot attributes & Plot the Bar chart
+    # X-Axix limits & label: 
+    plt.xlim(-0.75, len(timezonesLabels)-0.25)
+    plt.xlabel("Timezone")
+    xlocs, xlabs = plt.xticks()
+    xlocs=[i+1 for i in range(0,len(timezonesAvgSev))]
+    xlabs=[i/2 for i in range(0,len(timezonesAvgSev))]
+    plt.xticks(xlocs, xlabs)
+    # Y-Axis limits & label
+    plt.ylim(0, max(timezonesAvgSev)+0.500)
+    plt.ylabel("Avergare Severity of Accident")
+    # Plot the chart:
+    plt.figure(figsize=(12, 8))
+    plt.bar(timezonesLabels, timezonesAvgSev, color=timezonesGraphColors, alpha=0.5, align="center")
+    plt.title("Average Accidents Severity in Different Timezone")
+    # put value labes for Y-Axis 
+    for i, v in enumerate(timezonesAvgSev):
+        # Tip: Adjust -1.10 & +0.01 for positioning the lable text in the bar column
+        plt.text(xlocs[i] -1.10, v + 0.01, str(v))
+ 
+    # Define & Save: Output file - Pie chart
+    outputFile = outputFilePath + outputFileSubPath + 'Timezone_Accidents_AvgSev_Bar.jpg'
+    plt.savefig(outputFile)
+    plt.close()
+    print("Graph plotted: " + outputFile)
 
 ####################################################################################################################################################################################
