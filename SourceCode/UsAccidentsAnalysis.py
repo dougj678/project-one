@@ -10,6 +10,7 @@ from UsAccidentsAnalysisFunctions import getInputFile
 from UsAccidentsAnalysisFunctions import getInputData
 from UsAccidentsAnalysisFunctions import cleanInputData
 from UsAccidentsAnalysisFunctions import accidentsByTimezone
+from UsAccidentsAnalysisFunctions import addDateColumns
 
 ####################################################################################################################################################################################
 # Main logic
@@ -24,6 +25,9 @@ accidentsDataDF = getInputData(inputFile)
 
 # Clean up the dataframe before further processing:
 accidentsDataDF = cleanInputData(accidentsDataDF)
+
+# Add the required date columns to the dataframe for further analysis
+accidentsDataDF = addDateColumns(accidentsDataDF)
 
 # Analyze & Chart the data
 

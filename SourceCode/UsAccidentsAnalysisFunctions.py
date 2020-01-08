@@ -144,3 +144,18 @@ def accidentsByTimezone(inputDF: pd.DataFrame):
 
 
 ####################################################################################################################################################################################
+# Function: Add date columns to the dataframe  
+####################################################################################################################################################################################
+def addDateColumns(inputDF: pd.DataFrame) -> pd.DataFrame:
+
+    # Add columns for Month, Hour & Weekday
+    inputDF['Month']=pd.to_datetime(inputDF['Start_Time']).dt.month
+    inputDF['Hour']=pd.to_datetime(inputDF['Start_Time']).dt.hour
+    inputDF['Weekday']=pd.to_datetime(inputDF['Start_Time']).dt.weekday_name
+
+    # Print columns added
+    print("Added required date columns to the dataframe")
+
+    return inputDF
+
+####################################################################################################################################################################################
