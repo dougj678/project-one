@@ -3,26 +3,48 @@ import pandas as pd
 import numpy as np
 
 
-inputFile = './US Accident Sample.csv'
+inputFile = './US_Accidents.csv'
 inputDF = pd.read_csv(inputFile)
 
 print(inputDF.head())
-print(inputDF.get_dtype_counts())
+print(inputDF.dtypes.value_counts())
 print(inputDF.info())
 
 inputDF.dropna(how='all', inplace=True)
-print(inputDF.head())
-print(inputDF.get_dtype_counts())
-print(inputDF.info())
 
-inputDF.dropna(subset=['Timezone'], inplace=True)
+inputDF.dropna(subset=['Severity'], inplace=True)
 
-print(type(inputDF['Timezone'].value_counts()))
+sevList = inputDF['Severity'].value_counts().index.tolist()
+sevCounts = inputDF['Severity'].value_counts().tolist()
+print(sevList)
+print(sevCounts)
 
-print(type(inputDF['Timezone'].unique()))
-print(inputDF['Timezone'].unique())
 
-Timezones = []
-Counts = []
-Timezones_Counts = inputDF['Timezone'].value_counts()
-print(Timezones_Counts)
+timezoneList = inputDF['Timezone'].value_counts().index.tolist()
+for tz in timezoneList:
+    print(tz)
+    sevList = inputDF[inputDF['Timezone'] == tz]['Severity'].value_counts(dropna=False).sort_index().index.tolist()
+    sevCounts = inputDF[inputDF['Timezone'] == tz]['Severity'].value_counts(dropna=False).sort_index().tolist()
+    print(sevList)
+    print(sevList[0])
+    print(type(sevList[0]))
+    print(sevCounts)
+
+
+minDate = inputDF['Start_Time'].min()
+maxDate = inputDF['Start_Time'].max()
+
+print(minDate)
+# 2015-03-09 07:00:00
+# Delete any LT 2015-04-01 00:00:01
+print(maxDate)
+# 2019-04-01 03:26:00
+# Delete any GT 2019-03-31 23:59:59
+
+
+
+
+    
+
+
+
