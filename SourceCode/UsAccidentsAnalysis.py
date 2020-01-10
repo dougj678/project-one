@@ -9,8 +9,13 @@ import numpy as np
 from UsAccidentsAnalysisFunctions import getInputFile
 from UsAccidentsAnalysisFunctions import getInputData
 from UsAccidentsAnalysisFunctions import cleanInputData
-from UsAccidentsAnalysisFunctions import accidentsByTimezone
 from UsAccidentsAnalysisFunctions import addDateColumns
+from UsAccidentsAnalysisFunctions import accidentsByTimezone
+from UsAccidentsAnalysisFunctions import accidentsByHour
+from UsAccidentsAnalysisFunctions import accidentsByDay
+from UsAccidentsAnalysisFunctions import accidentsByMonth
+from UsAccidentsAnalysisFunctions import accidentsByState
+from UsAccidentsAnalysisFunctions import accidentsByWeather
 
 ####################################################################################################################################################################################
 # Main logic
@@ -20,7 +25,6 @@ from UsAccidentsAnalysisFunctions import addDateColumns
 inputFile = getInputFile()
 
 # Get initial input Data into a DataFrame
-
 accidentsDataDF = getInputData(inputFile)
 
 # Clean up the dataframe before further processing:
@@ -31,16 +35,21 @@ accidentsDataDF = addDateColumns(accidentsDataDF)
 
 # Analyze & Chart the data
 
-# Laury:
 # Call Function - Analyze by Weather condition (DF as input)
-# Call Function - Analyze by State (DF as input)
+accidentsByWeather(accidentsDataDF)
 
-# Sumit:
+# Call Function - Analyze by State (DF as input)
+accidentsByState(accidentsDataDF)
+
 # Call Function - Analyze by Time zone (DF as input)
 accidentsByTimezone(accidentsDataDF)
-# Call Function - Analyze by Month (DF as input)
 
-# Doug:
+# Call Function - Analyze by Month (DF as input)
+accidentsByMonth(accidentsDataDF)
+
 # Call Function - Analyze by Day of the week (DF as input)
+accidentsByDay(accidentsDataDF)
+
 # Call Function - Analyze by Time of the day (DF as input)
+accidentsByHour(accidentsDataDF)
 
