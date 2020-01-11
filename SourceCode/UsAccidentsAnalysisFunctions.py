@@ -489,8 +489,17 @@ def accidentsByMonth(inputDF: pd.DataFrame):
     # Get unique hours & counts
     monthCounts = inputDF['Month'].value_counts()
     monthLabels = inputDF['Month'].value_counts().index.tolist()
+    
+    # Get counts by YYYY-MM
+    yyyymmCounts = inputDF['Year-Month'].value_counts(dropna=False).sort_index().tolist()
+    yyyymmLabels = inputDF['Year-Month'].value_counts(dropna=False).sort_index().index.tolist()
+    yyyymmCounts2017 = inputDF[inputDF['Year'] == 2017]['Year-Month'].value_counts(dropna=False).sort_index().tolist()
+    yyyymmLabels2017 = inputDF[inputDF['Year'] == 2017]['Year-Month'].value_counts(dropna=False).sort_index().index.tolist()
+    yyyymmCounts2018 = inputDF[inputDF['Year'] == 2018]['Year-Month'].value_counts(dropna=False).sort_index().tolist()
+    yyyymmLabels2018 = inputDF[inputDF['Year'] == 2018]['Year-Month'].value_counts(dropna=False).sort_index().index.tolist()
 
-    #Plot the bar grapgh
+
+    # 1. Plot the bar grapgh
     plt.figure(figsize=(12, 8))
     plt.bar(monthLabels, monthCounts, alpha=0.5, align="center")
 
@@ -512,6 +521,29 @@ def accidentsByMonth(inputDF: pd.DataFrame):
 
    # Define & Save: Output file - Bar chart
     outputFile = outputFilePath  + outputFileSubPath + 'MonthOfYear_Accidents_Counts.jpg'
+    plt.savefig(outputFile)
+    plt.close()
+
+    print("Graph plotted: " + outputFile)
+
+
+
+    # 2. Plot a line graph comparing monthly progression by year 
+    plt.figure(figsize=(12, 8))
+
+    monthIndex = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    # Set the bar chart attributes such as X-Axis, Y-Axis, colors etc.
+    # colors
+    lineColors = ['royalblue', 'darkorange' ]
+    # title
+    plt.title("Accidents per Month for Year 2017 & 2018")
+    plt.plot(monthIndex, yyyymmCounts2017, marker = ' ', color = 'royalblue', label = '2017', linewidth=3)
+    plt.plot(monthIndex, yyyymmCounts2018, marker = ' ', color = 'darkorange', label = '2018', linewidth=3, )
+    plt.legend()
+
+
+   # Define & Save: Output file - Bar chart
+    outputFile = outputFilePath  + outputFileSubPath + 'MonthOfYear_2_Compare_Accidents_Counts.jpg'
     plt.savefig(outputFile)
     plt.close()
 
