@@ -111,8 +111,8 @@ def accidentsByTimezone(inputDF: pd.DataFrame):
     outputFileSubPath = 'ByTimezone/'
 
     # Get unique timezones & counts
-    timezonesCounts = inputDF['Timezone'].value_counts().tolist()
-    timezonesLabels = inputDF['Timezone'].value_counts().index.tolist()
+    timezonesCounts = inputDF['Timezone'].value_counts().sort_index().tolist()
+    timezonesLabels = inputDF['Timezone'].value_counts().sort_index().index.tolist()
 
     # Unique list all Severity values in the dataset
     uniqueSevList = inputDF['Severity'].value_counts(dropna=False).sort_index().index.tolist()
@@ -125,7 +125,7 @@ def accidentsByTimezone(inputDF: pd.DataFrame):
 
     # 1. Pie Chart (Count(s) of Accidents by timezone)
     # Set the plot attributes & Plot the Pie chart
-    pieExplode = (0.10, 0, 0, 0)    
+    pieExplode = (0, 0, 0, 0)    
     plt.figure(figsize=(12, 8))
     plt.axis("equal")
     plt.pie(timezonesCounts, explode=pieExplode, colors=timezonesGraphColors, labels=timezonesLabels,
@@ -409,9 +409,10 @@ def accidentsByHour(inputDF: pd.DataFrame):
 
 
     # Get unique hours & counts
-    hourCounts = inputDF['Hour'].value_counts()
-    hourLabels = inputDF['Hour'].value_counts().index.tolist()
+    hourCounts = inputDF['Hour'].value_counts(dropna=False).sort_index().tolist()
+    hourLabels = inputDF['Hour'].value_counts(dropna=False).sort_index().index.tolist()
 
+    hourIndex = ['0-1', '1-2', '2-3', '3-4', '4-5', '5-6', '6-7', '7-8', '8-9', '9-10', '10-11', '11-12', '12-13', '13-14', '14-15', '15-16', '16-17', '17-18', '18-19', '19-20', '20-21', '21-22', '22-23', '23-24']
     # Plot the bar grapgh
     plt.figure(figsize=(12, 8))
   
@@ -424,14 +425,19 @@ def accidentsByHour(inputDF: pd.DataFrame):
     plt.xlabel("Hour")
     xlocs, xlabs = plt.xticks()
     xlocs=[i+0 for i in range(0,len(hourCounts))]
-    xlabs=[i+1 for i in range(0,len(hourCounts))]
-    plt.xticks(xlocs, xlabs)
+    xlabs=[i for i in hourIndex]
+    plt.xticks(xlocs, xlabs, rotation = 45)
     # Y-Axis limits & label: 
     plt.ylim(0, max(hourCounts)+10000)
     plt.ylabel("Count of Accidents")
     # Plot 
-    plt.bar(hourLabels, hourCounts, alpha=0.5, align="center")
+    plt.bar(hourLabels, hourCounts, alpha=0.5, align="center", color=barColors)
     plt.title("Accidents by Hours of the Day")
+    ### Commented - Lack of space to put tick labels for each hour
+    # # put value labes for Y-Axis 
+    # for i, v in enumerate(hourCounts):
+    #     # Tip: Adjust -0.10 & +0.01 for positioning the lable text in the bar column
+    #     plt.text(xlocs[i] -0.125, v + 0.01, str(v))
     
     # Define & Save: Output file - Bar chart
     outputFile = outputFilePath + outputFileSubPath + 'HourOfDay_Accidents_Counts.jpg'
@@ -449,8 +455,8 @@ def accidentsByDay(inputDF: pd.DataFrame):
     # Chart by day of the week
 
     # Get unique hours & counts
-    weekdayCounts = inputDF['Weekday'].value_counts()
-    weekdayLabels = inputDF['Weekday'].value_counts().index.tolist()
+    weekdayCounts = inputDF['Weekday'].value_counts(dropna=False).tolist()
+    weekdayLabels = inputDF['Weekday'].value_counts(dropna=False).index.tolist()
 
     # Plot the bar grapgh
     plt.figure(figsize=(12, 8))
@@ -464,14 +470,18 @@ def accidentsByDay(inputDF: pd.DataFrame):
     plt.xlabel("Weekday")
     xlocs, xlabs = plt.xticks()
     xlocs=[i+0 for i in range(0,len(weekdayCounts))]
-    xlabs=[i+1 for i in range(0,len(weekdayCounts))]
+    xlabs=[i for i in weekdayLabels]
     plt.xticks(xlocs, xlabs)
     # Y-Axis limits & label: 
     plt.ylim(0, max(weekdayCounts)+25000)
     plt.ylabel("Count of Accidents")
     # Plot 
-    plt.bar(weekdayLabels, weekdayCounts, alpha=0.5, align="center")
+    plt.bar(weekdayLabels, weekdayCounts, alpha=0.5, align="center", color=barColors)
     plt.title("Accidents by Day of the Week")
+    # put value labes for Y-Axis 
+    for i, v in enumerate(weekdayCounts):
+        # Tip: Adjust -0.10 & +0.01 for positioning the lable text in the bar column
+        plt.text(xlocs[i] -0.30, v + 0.01, str(v))
     
     # Define & Save: Output file - Bar chart
     outputFile = outputFilePath + outputFileSubPath + 'DayOfWeek_Accidents_Counts.jpg'
@@ -487,8 +497,8 @@ def accidentsByMonth(inputDF: pd.DataFrame):
     outputFileSubPath = 'ByMonth/'
 
     # Get unique hours & counts
-    monthCounts = inputDF['Month'].value_counts()
-    monthLabels = inputDF['Month'].value_counts().index.tolist()
+    monthCounts = inputDF['Month'].value_counts(dropna=False).sort_index().tolist()
+    monthLabels = inputDF['Month'].value_counts(dropna=False).sort_index().index.tolist()
     
     # Get counts by YYYY-MM
     yyyymmCounts = inputDF['Year-Month'].value_counts(dropna=False).sort_index().tolist()
@@ -498,14 +508,17 @@ def accidentsByMonth(inputDF: pd.DataFrame):
     yyyymmCounts2018 = inputDF[inputDF['Year'] == 2018]['Year-Month'].value_counts(dropna=False).sort_index().tolist()
     yyyymmLabels2018 = inputDF[inputDF['Year'] == 2018]['Year-Month'].value_counts(dropna=False).sort_index().index.tolist()
 
+    monthIndex = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+
+    # colors
+    barColors = ['royalblue']
 
     # 1. Plot the bar grapgh
     plt.figure(figsize=(12, 8))
-    plt.bar(monthLabels, monthCounts, alpha=0.5, align="center")
+    # plt.bar(monthLabels, monthCounts, alpha=0.5, align="center")
+    plt.bar(monthLabels, monthCounts, alpha=0.5, align="center", color=barColors)
 
     # Set the bar chart attributes such as X-Axis, Y-Axis, colors etc.
-    # colors
-    barColors = ['royalblue']
     # title
     plt.title("Accidents by Month of the Year")
 
@@ -514,10 +527,16 @@ def accidentsByMonth(inputDF: pd.DataFrame):
     plt.xlabel("Month")
     xlocs, xlabs = plt.xticks()
     xlocs=[i+1 for i in range(0,len(monthCounts))]
-    xlabs=[i+1 for i in range(0,len(monthCounts))]
+    # xlabs=[i+1 for i in range(0,len(monthCounts))]
+    xlabs=[i for i in monthIndex]
     plt.xticks(xlocs, xlabs)
     plt.ylim(0, max(monthCounts)+5000)
     plt.ylabel("Count of Accidents")
+
+    # put value labes for Y-Axis 
+    for i, v in enumerate(monthCounts):
+        # Tip: Adjust -0.10 & +0.01 for positioning the lable text in the bar column
+        plt.text(xlocs[i] -0.30, v + 0.01, str(v))
 
    # Define & Save: Output file - Bar chart
     outputFile = outputFilePath  + outputFileSubPath + 'MonthOfYear_Accidents_Counts.jpg'
@@ -531,7 +550,6 @@ def accidentsByMonth(inputDF: pd.DataFrame):
     # 2. Plot a line graph comparing monthly progression by year 
     plt.figure(figsize=(12, 8))
 
-    monthIndex = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
     # Set the bar chart attributes such as X-Axis, Y-Axis, colors etc.
     # colors
     lineColors = ['royalblue', 'darkorange' ]
