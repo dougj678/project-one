@@ -909,3 +909,40 @@ def accidentsByState(inputDF: pd.DataFrame):
 
 
 ####################################################################################################################################################################################
+# Function: by Hourss of the Day per Month of Year  
+####################################################################################################################################################################################
+def accidentsByMonthByHours(inputDF: pd.DataFrame):
+
+    outputFileSubPath = 'ByMonth/ByHour/'
+
+    # Get unique months
+    monthCounts = inputDF['Month'].value_counts(dropna=False).sort_index().tolist()
+    monthLabels = inputDF['Month'].value_counts(dropna=False).sort_index().index.tolist()
+
+    # Hours Index for labels
+    hourIndex = ['0-1', '1-2', '2-3', '3-4', '4-5', '5-6', '6-7', '7-8', '8-9', '9-10', '10-11', '11-12', '12-13', '13-14', '14-15', '15-16', '16-17', '17-18', '18-19', '19-20', '20-21', '21-22', '22-23', '23-24']
+
+    # Plot attributes 
+    plt.figure(figsize=(16, 12))
+    plt.title("Accidents per Hour by Month of Year")
+
+    # Repeat for each month:
+    for m in monthLabels:
+        # Get unique hours & counts
+        hourCounts = inputDF[inputDF['Month'] == m]['Hour'].value_counts(dropna=False).sort_index().tolist()
+        # hourLabels = inputDF[inputDF['Month'] == m]['Hour'].value_counts(dropna=False).sort_index().index.tolist()
+        plt.plot(hourIndex, hourCounts, marker = ' ', label = str(m), linewidth=2)
+
+    # Done all months 
+    plt.legend()
+
+   # Define & Save: Output file - Bar chart
+    outputFile = outputFilePath  + outputFileSubPath + 'Accidents_Hour_MonthOfYear_1_Compare_Accidents_Counts.jpg'
+    plt.savefig(outputFile)
+    plt.close()
+
+    print("Graph plotted: " + outputFile)
+
+
+
+####################################################################################################################################################################################

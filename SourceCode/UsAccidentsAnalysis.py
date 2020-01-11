@@ -16,6 +16,7 @@ from UsAccidentsAnalysisFunctions import accidentsByDay
 from UsAccidentsAnalysisFunctions import accidentsByMonth
 from UsAccidentsAnalysisFunctions import accidentsByState
 from UsAccidentsAnalysisFunctions import accidentsByWeather
+from UsAccidentsAnalysisFunctions import accidentsByMonthByHours
 
 ####################################################################################################################################################################################
 # Main logic
@@ -46,6 +47,7 @@ accidentsByTimezone(accidentsDataDF)
 
 # Call Function - Analyze by Month (DF as input)
 accidentsByMonth(accidentsDataDF)
+accidentsByMonthByHours(accidentsDataDF)
 
 # Call Function - Analyze by Day of the week (DF as input)
 accidentsByDay(accidentsDataDF)
